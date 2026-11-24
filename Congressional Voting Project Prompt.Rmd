@@ -1,0 +1,81 @@
+---
+title: "Congressional Voting Patterns"
+subtitle: "Math 350 Final Project"
+output: 
+  pdf_document:
+    extra_dependencies: ["float"]
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
+```
+
+
+**Original Prompt:** 
+
+# General Guidelines
+
+The following are some immediate action items to complete. They present a starting point for the actions you should do to complete the coding part of the project.
+
+1. Read up on what Principal Component is and how we use it in the textbook  
+`An_Introduction_to_Statistical_Learning.pdf`, Section 10.2, page 374 - 385. Make sure to get a good understanding of what PCA, how we interpret the components and how we visualize them. 
+
+2. The dataset `Congress Voting 9-13-22 to 9-30-22.csv` contains data on 438 congressmen of the United States, as well as their voting behaviors for the month of September 2022 (right before midterm elections!). For each row and column, a 1 is placed there if the congresperson voted in favor of the proposal, while a 0 if they did not vote in favor. Your first task is cleaning this dataset so we can perform PCA with it.
+
+    a. Some congresspersons have obstained or were absent from voting. This can cause issues for us down the road as we look to perform numerical analysis. For these individuals, replace the `NA` values with the average from each vote (that is, the average of 0's and 1's in the given column).
+    
+    b. As you read in the literature, we often prefer to scale the data, otherwise the magnitude to certain variables dominates the associations between the variables in the sample. For each column, standardize the data by subtracting the mean and dividing by the standard deviation
+    
+3. At the bottom of page 377, take note of the footnote. 
+
+    _The principal component directions $\phi_1, \phi_2, \phi_3,...$ are the ordered sequence of eigenvectors of the matrix $X^TX$, and the variances of the components are the eigenvalues._
+    
+    This unlocks the key insight into _how_ we can compute our principal components!
+    
+    Let's compute $X^TX$. Take your imputed & scaled voting data, cast it to a matrix, remove the first column (which is party, and is not a numerical descriptor we want to include), and compute $X^TX$.
+    
+4. Compute the eigenvectors and eigenvalues of $X^TX$ utilizing `eigen()`. Your eigenvectors are your principal components!
+
+5. Okay, a quick aside now. $X^TX$ is also known as the _covariance matrix_. How awesome is that! We can compute that in R using `cov()` of the data. So, compute the covariance matrix, and compute the eigen vectors and eigen values. Next, make some comparisons
+    
+    a. How does $X^TX$ compare to the covariance matrix?
+    b. How do the eigenvalues of the two compare?
+    c. How do the eigenvectors compare?
+    d. Of the differences you are seeing, offer some explanation as to _why_ you are seeing these differences!
+    
+6. As always, there is some convenient function in R that can actually do this all for us regarding PCA. Rather than computing some transpose, matrix multiplication, and then eigen computations, let's let R do it for us. Using your imputed and scaled voting data, use the function `prcomp()` to compute the principal components. 
+
+    HINT: Remove the first column, since it is the party data and we do not need it in our numerical analysis. Make sure you set the flags `center` and `scale` equal to `FALSE` in the `prcomp()` function since we already centered and scaled the data in a previous step.
+    
+7. Create a biplot, and just explain what the red vectors and black numbers represent
+    
+8. Now we have three different ways to compute these principal components. What we did in steps 4 and 5 was compute a _rotational_ matrix, which is the key to projecting our current data onto the principal component space. To project our data onto these principal components, we must take our data and multiply it by these PCs. So do this: take our vote data and _matrix multiply_ this to the first two eigen vectors computed in part 4. By choosing just the first two eigen vectors, we are projecting onto the first two principal components.
+    
+9. Compute the percent variance explained (PCE). To do so, take each eigen vector from part 4, and compute the ratio of this eigen vector to the overall sum of all the eigen vectors. You should see, naturally, a decrease in values of these eigen vectors. Convenient! Our first principal component helps explain the most variance, the second explains the second-most, and so on. Plot those results, as you see pictured on page 383. How much variance is explained by the first two principal components? Could we reliably just use two PCs to represent the data?
+
+10. Here is the money shot: plot PC1 and PC2 from part 8 on a coordinate plane, and then _color each point by party_ (bonus points if you can color democrats blue and republicans red). What do you notice about this plot and what are some of the takeaways? I want a lot of the analysis to focus here, on explaining what is going on and how PCA offers insight into this high dimensional data and the fact that it can easily be visualized in two-dimensions. Give this some thought!
+
+11. Finally, it looks like there may be a few defectors from the democrat party that are voting more closely aligned with the republican party. This is apparent by the plot; a few blue points look close to the red cluster. Identify these individuals by using the `Member_Information.csv`. In this file, a `party_code` of 100 means they are a democrat, and 200 means they are republican. What are their names? Do some research on them to see if there is anything apparent in their history that indicates they may be more right-leaning, if anything.
+
+12. Maybe we can focus more on the individual bills that were voted on to see how these few democrats differ. For each column in our data, analyze the proportion of democrats that voted yes or no, and see if these few defectors agree/disagree with the democratic vote. If you find disparities, where these individuals did not vote in line with the democratic party, use the `Roll_Call_Descriptions.csv` to define what the topic of those bills were, and any relevance as to why they did not vote in line with their party.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
